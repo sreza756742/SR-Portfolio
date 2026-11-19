@@ -37,6 +37,7 @@ button { font: inherit; }
 }
 .brand-mark { display: block; justify-self: start; width: clamp(8rem, 9vw, 9.25rem); }
 .brand-mark img { width: 100%; height: auto; }
+.brand-mark--icon { width: clamp(2.15rem, 2.4vw, 2.55rem); }
 .desktop-nav { display: flex; gap: clamp(1.35rem, 3vw, 3.4rem); font-size: 0.87rem; font-weight: 680; }
 .desktop-nav a, .contact-link { position: relative; }
 .desktop-nav a::after, .contact-link::after {
@@ -119,7 +120,7 @@ button { font: inherit; }
 
 @media (max-width: 899px) {
   .site-header { grid-template-columns: 1fr auto; height: 4.5rem; }
-  .site-header .brand-mark { width: 8rem; }
+  .site-header .brand-mark--icon { width: 2.25rem; }
   .desktop-nav, .site-header > .contact-link { display: none; }
   .menu-toggle { display: flex; align-items: center; gap: 0.7rem; color: inherit; background: none; border: 0; padding: 0; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
   .menu-icon { width: 1.1rem; height: 1px; background: currentColor; position: relative; }
