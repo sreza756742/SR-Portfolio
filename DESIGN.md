@@ -27,8 +27,8 @@ An editorial, image-led portfolio influenced by the spatial confidence of Grid A
 
 ## Motion
 
-- Lenis supplies smooth wheel interpolation in every browser that has not requested reduced motion, including embedded desktop browsers.
-- IntersectionObserver controls section and content reveals; GSAP ScrollTrigger is reserved for image parallax.
+- GSAP ScrollSmoother supplies native-scroll-based interpolation on wheel, touch, and anchor navigation across the site.
+- GSAP ScrollTrigger controls section reveals, process wipes, and image parallax inside the shared ScrollSmoother coordinate system.
 - Motion is progressive enhancement: all core content remains semantic and usable without it.
 - Touch devices retain native scrolling.
 - `prefers-reduced-motion` disables interpolation and animation.

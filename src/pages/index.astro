@@ -1,6 +1,5 @@
 ---
 import "@fontsource-variable/manrope";
-import "lenis/dist/lenis.css";
 import "../styles/global.css";
 
 const projects = [
@@ -88,6 +87,8 @@ const process = [
       </nav>
     </header>
 
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
     <main id="main">
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-media" aria-hidden="true">
@@ -224,55 +225,26 @@ const process = [
         <p>Auckland · New Zealand</p>
       </div>
     </footer>
+      </div>
+    </div>
 
     <script>
-      import Lenis from "lenis";
       import gsap from "gsap";
       import ScrollTrigger from "gsap/ScrollTrigger";
+      import ScrollSmoother from "gsap/ScrollSmoother";
 
-      gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      let lenis: Lenis | null = null;
+      let smoother: ReturnType<typeof ScrollSmoother.create> | null = null;
 
-      if (!reducedMotion) {
-        lenis = new Lenis({
-          lerp: 0.065,
-          smoothWheel: true,
-          syncTouch: false,
-          wheelMultiplier: 0.78,
-          autoRaf: true
-        });
-
-        lenis.on("scroll", ScrollTrigger.update);
-      }
-
-      if (!reducedMotion && "IntersectionObserver" in window) {
-        const revealTargets = document.querySelectorAll<HTMLElement>(
-          "[data-reveal]:not(.hero [data-reveal]), [data-project], [data-service], [data-process]"
-        );
-        const revealObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const element = entry.target as HTMLElement;
-            element.classList.add("reveal-visible");
-            revealObserver.unobserve(element);
-            window.setTimeout(() => {
-              element.classList.remove("reveal-pending", "reveal-visible");
-            }, 950);
-          });
-        }, { threshold: 0.1, rootMargin: "0px 0px -30% 0px" });
-
-        requestAnimationFrame(() => {
-          revealTargets.forEach((element) => {
-            const bounds = element.getBoundingClientRect();
-            if (bounds.top > window.innerHeight * 0.82) {
-              element.classList.add("reveal-pending");
-              revealObserver.observe(element);
-            }
-          });
-        });
-      }
+      smoother = ScrollSmoother.create({
+        wrapper: "#smooth-wrapper",
+        content: "#smooth-content",
+        smooth: 1.15,
+        effects: true,
+        smoothTouch: 0.1,
+        normalizeScroll: true
+      });
 
       document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener("click", (event) => {
@@ -280,14 +252,10 @@ const process = [
           if (!target) return;
           event.preventDefault();
           closeMenu();
-          if (lenis) {
-            lenis.scrollTo(target, {
-              offset: 0,
-              lock: false,
-              force: true
-            });
+          if (smoother) {
+            smoother.scrollTo(target, true, "top top");
           } else {
-            target.scrollIntoView({ behavior: "auto" });
+            target.scrollIntoView({ behavior: "smooth" });
           }
         });
       });
@@ -298,7 +266,7 @@ const process = [
         menuToggle?.setAttribute("aria-expanded", "false");
         mobileMenu?.classList.remove("is-open");
         document.body.classList.remove("menu-open");
-        lenis?.start();
+        smoother?.paused(false);
       };
 
       menuToggle?.addEventListener("click", () => {
@@ -306,11 +274,9 @@ const process = [
         menuToggle.setAttribute("aria-expanded", String(!open));
         mobileMenu?.classList.toggle("is-open", !open);
         document.body.classList.toggle("menu-open", !open);
-        if (!open) lenis?.stop();
-        else lenis?.start();
+        smoother?.paused(!open);
       });
 
-      if (!reducedMotion) {
         const mm = gsap.matchMedia();
         ScrollTrigger.defaults({ invalidateOnRefresh: true });
 
@@ -322,6 +288,88 @@ const process = [
           stagger: 0.14,
           ease: "power3.out",
           delay: 0.35
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-reveal]:not(.hero [data-reveal])").forEach((element) => {
+          gsap.set(element, { y: 52, autoAlpha: 0, filter: "blur(8px)" });
+          ScrollTrigger.create({
+            trigger: element,
+            start: "top 84%",
+            once: true,
+            onEnter: () => gsap.to(element, {
+              y: 0,
+              autoAlpha: 1,
+              filter: "blur(0px)",
+              duration: 1.05,
+              ease: "power3.out",
+              clearProps: "transform,opacity,visibility,filter"
+            })
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-project]").forEach((card) => {
+          gsap.set(card, { y: 72, autoAlpha: 0 });
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top 88%",
+            once: true,
+            onEnter: () => gsap.to(card, {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.1,
+              ease: "power3.out",
+              clearProps: "transform,opacity,visibility"
+            })
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-service]").forEach((row) => {
+          const children = Array.from(row.children);
+          gsap.set(children, { y: 30, autoAlpha: 0 });
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 86%",
+            once: true,
+            onEnter: () => gsap.to(children, {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.85,
+              stagger: 0.07,
+              ease: "power3.out",
+              clearProps: "transform,opacity,visibility"
+            })
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-process]").forEach((row) => {
+          const art = row.querySelector<HTMLElement>(".process-art");
+          const copy = row.querySelectorAll<HTMLElement>(".process-number, .process-copy");
+          if (art) gsap.set(art, { clipPath: "inset(0 100% 0 0)" });
+          gsap.set(copy, { y: 28, autoAlpha: 0 });
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 84%",
+            once: true,
+            onEnter: () => {
+              const timeline = gsap.timeline();
+              if (art) {
+                timeline.to(art, {
+                  clipPath: "inset(0 0% 0 0)",
+                  duration: 1.05,
+                  ease: "power3.inOut",
+                  clearProps: "clipPath"
+                });
+              }
+              timeline.to(copy, {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.8,
+                stagger: 0.08,
+                ease: "power3.out",
+                clearProps: "transform,opacity,visibility"
+              }, art ? "-=0.65" : 0);
+            }
+          });
         });
 
         gsap.to(".hero-media img", {
@@ -359,7 +407,6 @@ const process = [
         });
 
         const refreshMotion = () => {
-          lenis?.resize();
           ScrollTrigger.refresh();
         };
 
@@ -369,7 +416,6 @@ const process = [
         document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((image) => {
           if (!image.complete) image.addEventListener("load", refreshMotion, { once: true });
         });
-      }
     </script>
   </body>
 </html>
