@@ -8,25 +8,29 @@ const projects = [
     title: "Effulgent",
     discipline: "Brand identity · Art direction",
     image: "/assets/work/effulgent.jpg",
-    position: "50% 50%"
+    position: "50% 50%",
+    presentation: "board"
   },
   {
     title: "Forge Media",
     discipline: "Brand strategy · Web design",
     image: "/assets/work/forge-media.jpg",
-    position: "50% 50%"
+    position: "50% 50%",
+    presentation: "board"
   },
   {
     title: "Sanjid R — Portfolio",
     discipline: "Web design · Development",
     image: "/assets/work/sanjid-r-website.jpg",
-    position: "50% 6%"
+    position: "50% 6%",
+    presentation: "detail"
   },
   {
     title: "Sanjid R — Identity",
     discipline: "Personal brand · Digital system",
     image: "/assets/work/sanjid-r-identity.jpg",
-    position: "50% 50%"
+    position: "50% 50%",
+    presentation: "detail"
   }
 ];
 
@@ -116,7 +120,7 @@ const process = [
           {projects.map((project, index) => (
             <article class="project-card" data-project>
               <div class="project-index" aria-hidden="true">0{index + 1}</div>
-              <figure class="project-media">
+              <figure class={`project-media project-media--${project.presentation}`}>
                 <img src={project.image} alt={`${project.title} case study`} style={`object-position:${project.position}`} loading="lazy" />
               </figure>
               <div class="project-meta">
@@ -229,21 +233,19 @@ const process = [
       gsap.registerPlugin(ScrollTrigger);
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const desktopMotion = window.matchMedia("(hover: hover) and (pointer: fine)");
       let lenis: Lenis | null = null;
 
-      if (!reducedMotion) {
+      if (!reducedMotion && desktopMotion.matches) {
         lenis = new Lenis({
-          lerp: 0.075,
+          lerp: 0.085,
           smoothWheel: true,
           syncTouch: false,
-          wheelMultiplier: 0.82,
-          autoToggle: true,
-          stopInertiaOnNavigate: true
+          wheelMultiplier: 0.78,
+          autoRaf: true
         });
 
         lenis.on("scroll", ScrollTrigger.update);
-        gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(0);
       }
 
       document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
@@ -284,6 +286,28 @@ const process = [
 
       if (!reducedMotion) {
         const mm = gsap.matchMedia();
+        ScrollTrigger.defaults({ invalidateOnRefresh: true });
+
+        const revealOnEnter = (element: HTMLElement, distance = 44) => {
+          ScrollTrigger.create({
+            trigger: element,
+            start: "top 88%",
+            once: true,
+            onEnter: () => {
+              gsap.fromTo(element,
+                { y: distance, autoAlpha: 0.18, filter: "blur(8px)" },
+                {
+                  y: 0,
+                  autoAlpha: 1,
+                  filter: "blur(0px)",
+                  duration: 0.9,
+                  ease: "power3.out",
+                  clearProps: "transform,opacity,visibility,filter"
+                }
+              );
+            }
+          });
+        };
 
         gsap.from("[data-header]", { yPercent: -120, duration: 1, ease: "power3.out", delay: 0.15 });
         gsap.from(".hero-services, .hero-statement, .scroll-cue", {
@@ -304,57 +328,52 @@ const process = [
 
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
           if (element.closest(".hero")) return;
-          gsap.from(element, {
-            y: 55,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: element, start: "top 86%", once: true }
-          });
+          revealOnEnter(element);
         });
 
         gsap.utils.toArray<HTMLElement>("[data-project]").forEach((card) => {
-          const image = card.querySelector("img");
-          gsap.from(card, {
-            y: 70,
-            opacity: 0,
-            duration: 1.1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: card, start: "top 88%", once: true }
-          });
-          gsap.fromTo(image, { scale: 1.13, yPercent: -4 }, {
-            scale: 1.03,
-            yPercent: 4,
-            ease: "none",
-            scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1.1 }
-          });
+          revealOnEnter(card, 58);
+          const image = card.querySelector<HTMLElement>(".project-media--detail img");
+          if (image) {
+            gsap.fromTo(image, { scale: 1.08, yPercent: -2 }, {
+              scale: 1.02,
+              yPercent: 2,
+              ease: "none",
+              scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1.1 }
+            });
+          }
         });
 
         gsap.utils.toArray<HTMLElement>("[data-service]").forEach((row) => {
-          gsap.from(row.children, {
-            y: 24,
-            opacity: 0,
-            stagger: 0.055,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: { trigger: row, start: "top 88%", once: true }
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 88%",
+            once: true,
+            onEnter: () => gsap.fromTo(row.children,
+              { y: 24, autoAlpha: 0 },
+              { y: 0, autoAlpha: 1, stagger: 0.055, duration: 0.78, ease: "power3.out", clearProps: "transform,opacity,visibility" }
+            )
           });
         });
 
         gsap.utils.toArray<HTMLElement>("[data-process]").forEach((row) => {
-          const art = row.querySelector(".process-art");
-          gsap.from(row, {
-            opacity: 0,
-            y: 60,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: row, start: "top 86%", once: true }
-          });
-          gsap.fromTo(art, { clipPath: "inset(0 100% 0 0)" }, {
-            clipPath: "inset(0 0% 0 0)",
-            duration: 1.2,
-            ease: "power4.inOut",
-            scrollTrigger: { trigger: row, start: "top 80%", once: true }
+          const art = row.querySelector<HTMLElement>(".process-art");
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 86%",
+            once: true,
+            onEnter: () => {
+              gsap.fromTo(row,
+                { y: 52, autoAlpha: 0.15 },
+                { y: 0, autoAlpha: 1, duration: 0.9, ease: "power3.out", clearProps: "transform,opacity,visibility" }
+              );
+              if (art) {
+                gsap.fromTo(art,
+                  { clipPath: "inset(0 100% 0 0)" },
+                  { clipPath: "inset(0 0% 0 0)", duration: 1.05, ease: "power4.inOut", clearProps: "clipPath" }
+                );
+              }
+            }
           });
         });
 
@@ -371,6 +390,18 @@ const process = [
             ease: "none",
             scrollTrigger: { trigger: ".about-lead", start: "top 75%", end: "bottom 25%", scrub: 1 }
           });
+        });
+
+        const refreshMotion = () => {
+          lenis?.resize();
+          ScrollTrigger.refresh();
+        };
+
+        requestAnimationFrame(() => requestAnimationFrame(refreshMotion));
+        window.addEventListener("load", refreshMotion, { once: true });
+        document.fonts?.ready.then(refreshMotion);
+        document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((image) => {
+          if (!image.complete) image.addEventListener("load", refreshMotion, { once: true });
         });
       }
     </script>
