@@ -1,0 +1,371 @@
+---
+import "@fontsource-variable/manrope";
+import "lenis/dist/lenis.css";
+import "../styles/global.css";
+
+const projects = [
+  {
+    title: "Effulgent",
+    discipline: "Brand identity · Art direction",
+    image: "/assets/work/effulgent.jpg",
+    position: "50% 50%"
+  },
+  {
+    title: "Forge Media",
+    discipline: "Brand strategy · Web design",
+    image: "/assets/work/forge-media.jpg",
+    position: "50% 50%"
+  },
+  {
+    title: "Sanjid R — Portfolio",
+    discipline: "Web design · Development",
+    image: "/assets/work/sanjid-r-website.jpg",
+    position: "50% 6%"
+  },
+  {
+    title: "Sanjid R — Identity",
+    discipline: "Personal brand · Digital system",
+    image: "/assets/work/sanjid-r-identity.jpg",
+    position: "50% 50%"
+  }
+];
+
+const services = [
+  ["01", "Brand identity", "Strategy, visual identity, art direction and practical brand systems."],
+  ["02", "Web design", "Distinctive, responsive interfaces built around clarity and momentum."],
+  ["03", "Creative direction", "A clear visual point of view carried consistently across every touchpoint."],
+  ["04", "Development", "Fast, considered front-end builds that make the design feel alive."]
+];
+
+const process = [
+  ["01", "Discover", "I learn the business, audience and ambition before defining the problem worth solving."],
+  ["02", "Define", "We establish the creative direction, core idea and a focused path through the work."],
+  ["03", "Design", "The identity and digital experience take shape through an exacting, iterative system."],
+  ["04", "Deliver", "Every final asset is refined, organised and prepared to perform in the real world."]
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="description" content="The independent design practice of Sanjid R — brand identities, web design and creative direction." />
+    <title>Sanjid R — Independent Designer</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand-mark" href="#top" aria-label="Sanjid R, home">SR<span>®</span></a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#work">Work</a>
+        <a href="#about">Studio</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+      </nav>
+      <a class="contact-link" href="#contact">Contact <span aria-hidden="true">↘</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+        <a href="#work">Work</a>
+        <a href="#about">Studio</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true">
+          <img src="/assets/art/hero-mockup-recreated.png" alt="" fetchpriority="high" />
+        </div>
+        <div class="hero-wash" aria-hidden="true"></div>
+        <div class="hero-content shell">
+          <p class="hero-services" data-reveal>Art direction<br />Brand identity<br />Web design</p>
+          <div class="hero-statement" data-reveal>
+            <p class="eyebrow">Independent designer · Auckland, New Zealand</p>
+            <h1 id="hero-title">Building distinctive visual experiences that help brands stand out and connect.</h1>
+          </div>
+          <a class="scroll-cue" href="#work" aria-label="Scroll to selected work">
+            <span>Selected work</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section work-section shell" id="work" aria-labelledby="work-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="eyebrow">Selected projects · 2024—26</p>
+            <h2 id="work-title">Work</h2>
+          </div>
+          <p class="section-note">Brand identities and digital experiences shaped from first idea to final detail.</p>
+        </div>
+
+        <div class="project-grid">
+          {projects.map((project, index) => (
+            <article class="project-card" data-project>
+              <div class="project-index" aria-hidden="true">0{index + 1}</div>
+              <figure class="project-media">
+                <img src={project.image} alt={`${project.title} case study`} style={`object-position:${project.position}`} loading="lazy" />
+              </figure>
+              <div class="project-meta">
+                <h3>{project.title}</h3>
+                <p>{project.discipline}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="section about-section shell" id="about" aria-labelledby="about-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="eyebrow">Who I am</p>
+            <h2 id="about-title">Studio</h2>
+          </div>
+          <p class="section-note">One independent practice, built for close collaboration.</p>
+        </div>
+        <p class="about-lead" data-reveal>An independent design practice focused on creating refined brand identities and seamless digital experiences.</p>
+        <div class="about-grid">
+          <figure class="about-media" data-reveal>
+            <img src="/assets/art/about-studio.png" alt="Hands arranging abstract design studies on a studio table" loading="lazy" />
+          </figure>
+          <div class="about-copy" data-reveal>
+            <p>I’m Sanjid, a multidisciplinary designer working across identity, art direction and the web. I bring strategy and execution together so every part of a brand feels intentional, distinctive and useful.</p>
+            <p>My approach is direct and collaborative: understand what matters, find the strongest idea, then refine it until the result feels inevitable.</p>
+          </div>
+          <dl class="about-facts" data-reveal>
+            <div><dt>Based</dt><dd>Auckland, NZ</dd></div>
+            <div><dt>Focus</dt><dd>Brand + Web</dd></div>
+            <div><dt>Working with</dt><dd>Ambitious founders and teams</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section services-section shell" id="services" aria-labelledby="services-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="eyebrow">What I do</p>
+            <h2 id="services-title">Services</h2>
+          </div>
+          <p class="section-note">Flexible enough for one focused project. Structured enough for a complete transformation.</p>
+        </div>
+        <div class="service-list">
+          {services.map(([number, title, body]) => (
+            <article class="service-row" data-service>
+              <span class="service-number">{number}</span>
+              <h3>{title}</h3>
+              <p>{body}</p>
+              <span class="service-arrow" aria-hidden="true">↗</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="section process-section shell" id="process" aria-labelledby="process-title">
+        <div class="section-heading" data-reveal>
+          <div>
+            <p class="eyebrow">How we get there</p>
+            <h2 id="process-title">Process</h2>
+          </div>
+          <p class="section-note">A clear, collaborative path from an open question to a confident outcome.</p>
+        </div>
+        <div class="process-list">
+          {process.map(([number, title, body], index) => (
+            <article class="process-row" data-process>
+              <div class={`process-art process-art-${index + 1}`} aria-hidden="true">
+                <img src="/assets/art/process-materials.png" alt="" loading="lazy" />
+              </div>
+              <span class="process-number">{number}</span>
+              <div class="process-copy">
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact" aria-labelledby="contact-title">
+        <div class="contact-media" aria-hidden="true"><img src="/assets/art/hero-material.png" alt="" loading="lazy" /></div>
+        <div class="contact-content shell" data-reveal>
+          <p class="eyebrow">Have a project in mind?</p>
+          <h2 id="contact-title">Let’s build something great together.</h2>
+          <a class="contact-cta" href="mailto:hello@sanjid-r.com?subject=Project%20enquiry%20for%20Sanjid%20R">Start a conversation <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer shell">
+      <div class="footer-top">
+        <a class="brand-mark" href="#top" aria-label="Back to top">SR<span>®</span></a>
+        <p>Independent graphic designer<br />and web developer.</p>
+        <a href="#top">Back to top ↑</a>
+      </div>
+      <div class="footer-bottom">
+        <p>© {new Date().getFullYear()} Sanjid R</p>
+        <p>Auckland · New Zealand</p>
+      </div>
+    </footer>
+
+    <script>
+      import Lenis from "lenis";
+      import gsap from "gsap";
+      import ScrollTrigger from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let lenis: Lenis | null = null;
+
+      if (!reducedMotion) {
+        lenis = new Lenis({
+          lerp: 0.075,
+          smoothWheel: true,
+          syncTouch: false,
+          wheelMultiplier: 0.82,
+          autoToggle: true,
+          stopInertiaOnNavigate: true
+        });
+
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (event) => {
+          const target = document.querySelector(anchor.hash);
+          if (!target) return;
+          event.preventDefault();
+          closeMenu();
+          if (lenis) {
+            lenis.scrollTo(target, {
+              offset: 0,
+              lock: false,
+              force: true
+            });
+          } else {
+            target.scrollIntoView({ behavior: "auto" });
+          }
+        });
+      });
+
+      const menuToggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const mobileMenu = document.querySelector<HTMLElement>(".mobile-menu");
+      const closeMenu = () => {
+        menuToggle?.setAttribute("aria-expanded", "false");
+        mobileMenu?.classList.remove("is-open");
+        document.body.classList.remove("menu-open");
+        lenis?.start();
+      };
+
+      menuToggle?.addEventListener("click", () => {
+        const open = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.setAttribute("aria-expanded", String(!open));
+        mobileMenu?.classList.toggle("is-open", !open);
+        document.body.classList.toggle("menu-open", !open);
+        if (!open) lenis?.stop();
+        else lenis?.start();
+      });
+
+      if (!reducedMotion) {
+        const mm = gsap.matchMedia();
+
+        gsap.from("[data-header]", { yPercent: -120, duration: 1, ease: "power3.out", delay: 0.15 });
+        gsap.from(".hero-services, .hero-statement, .scroll-cue", {
+          y: 35,
+          opacity: 0,
+          duration: 1.15,
+          stagger: 0.14,
+          ease: "power3.out",
+          delay: 0.35
+        });
+
+        gsap.to(".hero-media img", {
+          yPercent: 12,
+          scale: 1.08,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1.2 }
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
+          if (element.closest(".hero")) return;
+          gsap.from(element, {
+            y: 55,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: element, start: "top 86%", once: true }
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-project]").forEach((card) => {
+          const image = card.querySelector("img");
+          gsap.from(card, {
+            y: 70,
+            opacity: 0,
+            duration: 1.1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: card, start: "top 88%", once: true }
+          });
+          gsap.fromTo(image, { scale: 1.13, yPercent: -4 }, {
+            scale: 1.03,
+            yPercent: 4,
+            ease: "none",
+            scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1.1 }
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-service]").forEach((row) => {
+          gsap.from(row.children, {
+            y: 24,
+            opacity: 0,
+            stagger: 0.055,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: { trigger: row, start: "top 88%", once: true }
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-process]").forEach((row) => {
+          const art = row.querySelector(".process-art");
+          gsap.from(row, {
+            opacity: 0,
+            y: 60,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: row, start: "top 86%", once: true }
+          });
+          gsap.fromTo(art, { clipPath: "inset(0 100% 0 0)" }, {
+            clipPath: "inset(0 0% 0 0)",
+            duration: 1.2,
+            ease: "power4.inOut",
+            scrollTrigger: { trigger: row, start: "top 80%", once: true }
+          });
+        });
+
+        gsap.to(".contact-media img", {
+          scale: 1.12,
+          yPercent: 8,
+          ease: "none",
+          scrollTrigger: { trigger: ".contact-section", start: "top bottom", end: "bottom top", scrub: 1.2 }
+        });
+
+        mm.add("(min-width: 900px)", () => {
+          gsap.to(".about-lead", {
+            xPercent: -8,
+            ease: "none",
+            scrollTrigger: { trigger: ".about-lead", start: "top 75%", end: "bottom 25%", scrub: 1 }
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
