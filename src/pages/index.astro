@@ -233,12 +233,11 @@ const process = [
       gsap.registerPlugin(ScrollTrigger);
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const desktopMotion = window.matchMedia("(hover: hover) and (pointer: fine)");
       let lenis: Lenis | null = null;
 
-      if (!reducedMotion && desktopMotion.matches) {
+      if (!reducedMotion) {
         lenis = new Lenis({
-          lerp: 0.085,
+          lerp: 0.065,
           smoothWheel: true,
           syncTouch: false,
           wheelMultiplier: 0.78,
@@ -246,6 +245,33 @@ const process = [
         });
 
         lenis.on("scroll", ScrollTrigger.update);
+      }
+
+      if (!reducedMotion && "IntersectionObserver" in window) {
+        const revealTargets = document.querySelectorAll<HTMLElement>(
+          "[data-reveal]:not(.hero [data-reveal]), [data-project], [data-service], [data-process]"
+        );
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const element = entry.target as HTMLElement;
+            element.classList.add("reveal-visible");
+            revealObserver.unobserve(element);
+            window.setTimeout(() => {
+              element.classList.remove("reveal-pending", "reveal-visible");
+            }, 950);
+          });
+        }, { threshold: 0.1, rootMargin: "0px 0px -30% 0px" });
+
+        requestAnimationFrame(() => {
+          revealTargets.forEach((element) => {
+            const bounds = element.getBoundingClientRect();
+            if (bounds.top > window.innerHeight * 0.82) {
+              element.classList.add("reveal-pending");
+              revealObserver.observe(element);
+            }
+          });
+        });
       }
 
       document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
@@ -288,27 +314,6 @@ const process = [
         const mm = gsap.matchMedia();
         ScrollTrigger.defaults({ invalidateOnRefresh: true });
 
-        const revealOnEnter = (element: HTMLElement, distance = 44) => {
-          ScrollTrigger.create({
-            trigger: element,
-            start: "top 88%",
-            once: true,
-            onEnter: () => {
-              gsap.fromTo(element,
-                { y: distance, autoAlpha: 0.18, filter: "blur(8px)" },
-                {
-                  y: 0,
-                  autoAlpha: 1,
-                  filter: "blur(0px)",
-                  duration: 0.9,
-                  ease: "power3.out",
-                  clearProps: "transform,opacity,visibility,filter"
-                }
-              );
-            }
-          });
-        };
-
         gsap.from("[data-header]", { yPercent: -120, duration: 1, ease: "power3.out", delay: 0.15 });
         gsap.from(".hero-services, .hero-statement, .scroll-cue", {
           y: 35,
@@ -326,13 +331,7 @@ const process = [
           scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1.2 }
         });
 
-        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
-          if (element.closest(".hero")) return;
-          revealOnEnter(element);
-        });
-
         gsap.utils.toArray<HTMLElement>("[data-project]").forEach((card) => {
-          revealOnEnter(card, 58);
           const image = card.querySelector<HTMLElement>(".project-media--detail img");
           if (image) {
             gsap.fromTo(image, { scale: 1.08, yPercent: -2 }, {
@@ -342,39 +341,6 @@ const process = [
               scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1.1 }
             });
           }
-        });
-
-        gsap.utils.toArray<HTMLElement>("[data-service]").forEach((row) => {
-          ScrollTrigger.create({
-            trigger: row,
-            start: "top 88%",
-            once: true,
-            onEnter: () => gsap.fromTo(row.children,
-              { y: 24, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, stagger: 0.055, duration: 0.78, ease: "power3.out", clearProps: "transform,opacity,visibility" }
-            )
-          });
-        });
-
-        gsap.utils.toArray<HTMLElement>("[data-process]").forEach((row) => {
-          const art = row.querySelector<HTMLElement>(".process-art");
-          ScrollTrigger.create({
-            trigger: row,
-            start: "top 86%",
-            once: true,
-            onEnter: () => {
-              gsap.fromTo(row,
-                { y: 52, autoAlpha: 0.15 },
-                { y: 0, autoAlpha: 1, duration: 0.9, ease: "power3.out", clearProps: "transform,opacity,visibility" }
-              );
-              if (art) {
-                gsap.fromTo(art,
-                  { clipPath: "inset(0 100% 0 0)" },
-                  { clipPath: "inset(0 0% 0 0)", duration: 1.05, ease: "power4.inOut", clearProps: "clipPath" }
-                );
-              }
-            }
-          });
         });
 
         gsap.to(".contact-media img", {
