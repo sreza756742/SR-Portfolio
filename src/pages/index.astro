@@ -280,10 +280,8 @@ const process = [
         const mm = gsap.matchMedia();
         ScrollTrigger.defaults({ invalidateOnRefresh: true });
 
-        gsap.from("[data-header]", { yPercent: -120, duration: 1, ease: "power3.out", delay: 0.15 });
         gsap.from(".hero-services, .hero-statement, .scroll-cue", {
-          y: 35,
-          opacity: 0,
+          y: 24,
           duration: 1.15,
           stagger: 0.14,
           ease: "power3.out",
@@ -291,61 +289,44 @@ const process = [
         });
 
         gsap.utils.toArray<HTMLElement>("[data-reveal]:not(.hero [data-reveal])").forEach((element) => {
-          gsap.set(element, { y: 52, autoAlpha: 0, filter: "blur(8px)" });
-          ScrollTrigger.create({
+          gsap.from(element, {
+            y: 42,
+            duration: 1.05,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: {
             trigger: element,
             start: "top 84%",
-            once: true,
-            onEnter: () => gsap.to(element, {
-              y: 0,
-              autoAlpha: 1,
-              filter: "blur(0px)",
-              duration: 1.05,
-              ease: "power3.out",
-              clearProps: "transform,opacity,visibility,filter"
-            })
+              once: true
+            }
           });
         });
 
         gsap.utils.toArray<HTMLElement>("[data-project]").forEach((card) => {
-          gsap.set(card, { y: 72, autoAlpha: 0 });
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top 88%",
-            once: true,
-            onEnter: () => gsap.to(card, {
-              y: 0,
-              autoAlpha: 1,
-              duration: 1.1,
-              ease: "power3.out",
-              clearProps: "transform,opacity,visibility"
-            })
+          gsap.from(card, {
+            y: 58,
+            duration: 1.1,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: { trigger: card, start: "top 88%", once: true }
           });
         });
 
         gsap.utils.toArray<HTMLElement>("[data-service]").forEach((row) => {
           const children = Array.from(row.children);
-          gsap.set(children, { y: 30, autoAlpha: 0 });
-          ScrollTrigger.create({
-            trigger: row,
-            start: "top 86%",
-            once: true,
-            onEnter: () => gsap.to(children, {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.85,
-              stagger: 0.07,
-              ease: "power3.out",
-              clearProps: "transform,opacity,visibility"
-            })
+          gsap.from(children, {
+            y: 26,
+            duration: 0.85,
+            stagger: 0.07,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: { trigger: row, start: "top 86%", once: true }
           });
         });
 
         gsap.utils.toArray<HTMLElement>("[data-process]").forEach((row) => {
           const art = row.querySelector<HTMLElement>(".process-art");
           const copy = row.querySelectorAll<HTMLElement>(".process-number, .process-copy");
-          if (art) gsap.set(art, { clipPath: "inset(0 100% 0 0)" });
-          gsap.set(copy, { y: 28, autoAlpha: 0 });
           ScrollTrigger.create({
             trigger: row,
             start: "top 84%",
@@ -353,20 +334,19 @@ const process = [
             onEnter: () => {
               const timeline = gsap.timeline();
               if (art) {
-                timeline.to(art, {
-                  clipPath: "inset(0 0% 0 0)",
+                timeline.from(art, {
+                  clipPath: "inset(0 8% 0 0)",
                   duration: 1.05,
                   ease: "power3.inOut",
                   clearProps: "clipPath"
                 });
               }
-              timeline.to(copy, {
-                y: 0,
-                autoAlpha: 1,
+              timeline.from(copy, {
+                y: 24,
                 duration: 0.8,
                 stagger: 0.08,
                 ease: "power3.out",
-                clearProps: "transform,opacity,visibility"
+                clearProps: "transform"
               }, art ? "-=0.65" : 0);
             }
           });
